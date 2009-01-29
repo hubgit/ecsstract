@@ -1,0 +1,5 @@
+Mac OS X:
+/Applications/Firefox.app/Contents/MacOS/firefox-bin -app /full/path/to/ecsstract/application.ini -jsconsole -console
+
+Linux:
+xulrunner ecsstract/application.ini -jsconsole -console
