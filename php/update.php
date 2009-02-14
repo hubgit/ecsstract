@@ -10,5 +10,5 @@ foreach ($files as $file){
     
   print "$file\n";
      
-  system(sprintf("./scrape.php %s > 'output/%s.ics'", escapeshellarg($file), pathinfo($file, PATHINFO_FILENAME)));
+  system(sprintf("./scrape.php %s > '../output/%s.ics'", escapeshellarg($file), pathinfo($file, PATHINFO_FILENAME)));
 }
