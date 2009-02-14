@@ -1,0 +1,6 @@
+install PHP >= 5.3
+
+mkdir output
+
+php update.php
+
