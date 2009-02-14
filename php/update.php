@@ -3,7 +3,7 @@
   
 chdir(realpath(__DIR__));
   
-$files = scandir('definitions');
+$files = scandir('../definitions');
 foreach ($files as $file){
   if (!preg_match('/\.js$/', $file))
     continue;

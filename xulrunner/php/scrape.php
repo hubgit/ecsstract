@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-$dir = __DIR__ . '/../definitions';
+$dir = __DIR__ . '/../../definitions';
 
 $files = scandir($dir);
 foreach ($files as $file){

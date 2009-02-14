@@ -5,7 +5,7 @@ date_default_timezone_set('Europe/London');
 
 require __DIR__ . '/includes/main.inc.php';
 
-$definitions = __DIR__ . '/definitions';
+$definitions = __DIR__ . '/../definitions';
 
 if ($argv[1])
   $files = array($argv[1]);
