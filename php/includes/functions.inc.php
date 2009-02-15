@@ -1,5 +1,13 @@
 <?php
 
+function debug($t){
+  $debug = 0;
+  if ($debug){
+    print_r($t);
+    print "\n";
+  }
+}
+
 function get_dom($url){
   global $path;
   $path = dirname($url);
@@ -107,13 +115,5 @@ function strtodate($format, $data){
 
 function ical($defs, $events){
   require 'icalendar.tpl.php';
-}
-
-function debug($t){
-  $debug = 1;
-  if ($debug){
-    print_r($t);
-    print "\n";
-  }
 }
 

@@ -10,7 +10,7 @@
     "dc:title": ".lst_head" ,
     "dc:description": { "type":"html" },
     "price": ".lst_price",
-    "dc:date": { "selector":".lst_date", "date": "j M g a" }      
+    "dc:date": { "selector":".lst_date", "date": "j M g a" },      
     "start": { "derived":"dc:date" }
   },
   

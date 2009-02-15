@@ -11,7 +11,7 @@ foreach ($files as $file){
      
   $out = sprintf('../output/%s.ics', pathinfo($file, PATHINFO_FILENAME));
   
-  if (filemtime($out) < $now - 3600 * 24){
+  if (!file_exists($out) || $argv[1] == 'force' || filemtime($out) < $now - 3600 * 24){
     print "$file\n";
     system(sprintf("./scrape.php %s > %s", escapeshellarg($file), escapeshellarg($out)));
   }

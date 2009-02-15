@@ -82,8 +82,7 @@ foreach ($files as $file){
     if (!($properties['dc:identifier'] && $properties['dc:date'] && $properties['dc:title']))
       continue;
       
-    if ($properties['dc:identifier'])
-      $properties['dc:identifier'] = base_url($properties['dc:identifier']);
+    $properties['dc:identifier'] = base_url($properties['dc:identifier']);
       
     if (!$properties['start'])
       $properties['start'] = strtotime($properties['dc:date']);
