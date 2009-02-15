@@ -9,7 +9,7 @@ foreach ($files as $file){
   if (!preg_match('/\.defs\.js$/', $file))
     continue;
      
-  $out = sprintf('../output/%s.ics', pathinfo($file, PATHINFO_FILENAME));
+  $out = sprintf('../output/%s.ics', basename($file, '.defs.js'));
   
   if (!file_exists($out) || $argv[1] == 'force' || filemtime($out) < $now - 3600 * 24){
     print "$file\n";
