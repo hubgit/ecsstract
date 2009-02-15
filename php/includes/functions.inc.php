@@ -9,10 +9,13 @@ function get_dom($url){
   global $root;
   $root = "{$p['scheme']}://{$p['host']}";
    
-  $html = @DOMDocument::loadHTMLFile($url);
-  $dom = new Zend_Dom_Query($html->saveHTML());
+  //$html = @DOMDocument::loadHTMLFile($url);
   
-  return $dom;  
+  $dom = new DOMDocument('1.0', 'UTF-8');
+  $dom->preserveWhiteSpace = TRUE;
+  @$dom->loadHTMLFile($url);
+  
+  return new Zend_Dom_Query($dom->saveHTML());
 }
 
 function format($node, $def){
@@ -98,7 +101,6 @@ function base_url($url){
 function strtodate($format, $data){
   debug($format); debug($data);
   $date = DateTime::createFromFormat($format, trim($data));
-  debug($date->getTimestamp());
   if (is_object($date))
     return $date->format('c');
 }
@@ -108,7 +110,7 @@ function ical($defs, $events){
 }
 
 function debug($t){
-  $debug = 0;
+  $debug = 1;
   if ($debug){
     print_r($t);
     print "\n";

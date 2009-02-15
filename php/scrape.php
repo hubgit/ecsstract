@@ -5,7 +5,7 @@ date_default_timezone_set('Europe/London');
 
 require __DIR__ . '/includes/main.inc.php';
 
-$definitions = __DIR__ . '/../definitions';
+$definitions = __DIR__ . '/../definitions/';
 
 if ($argv[1])
   $files = array($argv[1]);
@@ -13,11 +13,17 @@ else
   $files = scandir($definitions);
   
 foreach ($files as $file){
-  if (!preg_match('/\.js$/', $file))
+  if (!preg_match('/\.defs\.js$/', $file))
     continue;
+    
+  $base = basename($file, '.defs.js');
+  $inc = $definitions . $base . '.inc.php';
+  if (file_exists($inc))
+    include $inc;
+  $fix = preg_replace('/\W/', '_', $base) . '\fix';
   
   debug($file);
-  $json = file_get_contents($definitions . '/' . $file);
+  $json = file_get_contents($definitions . $file);
   $json = str_replace('\\', '\\\\', $json); // for regular expressions
 
   $defs = json_decode($json);
@@ -60,20 +66,24 @@ foreach ($files as $file){
         continue;
        
       if ($def->derived)
-        $result = $properties[$def->derived];
+        $data = $properties[$def->derived];
       else
-        $result = format($item, $def);
-        
-      if ($result && isset($def->fix) && isset($def->fix->php)){        
-        $func = create_function('$data', $def->fix->php);
-        $result = call_user_func($func, $result);
-      }
+        $data = format($item, $def);
       
-      $properties[$property] = $result;
+      if (function_exists($fix))
+        $data = call_user_func($fix, $property, $data);
+      
+      if ($def->date)
+        $data = strtodate($def->date, $data);
+      
+      $properties[$property] = $data;
     }
     
     if (!($properties['dc:identifier'] && $properties['dc:date'] && $properties['dc:title']))
       continue;
+      
+    if ($properties['dc:identifier'])
+      $properties['dc:identifier'] = base_url($properties['dc:identifier']);
       
     if (!$properties['start'])
       $properties['start'] = strtotime($properties['dc:date']);
