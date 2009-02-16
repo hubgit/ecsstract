@@ -17,7 +17,7 @@ function fix($property, $data){
         if (!strstr($time, ':'))
           $time .= ':00';
           
-        return sprintf('%d %s %02d %s%s', $day, ucfirst(strtolower($month)), $year, $time, $am);
+        $data = sprintf('%d %s %02d %s%s', $day, ucfirst(strtolower($month)), $year, $time, $am);
       }
     break;
   }

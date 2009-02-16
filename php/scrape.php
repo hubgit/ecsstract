@@ -1,6 +1,8 @@
 #!/opt/php5.3/bin/php
 <?php
 
+global $debug; $debug = 1;
+
 date_default_timezone_set('Europe/London');
 
 require __DIR__ . '/includes/main.inc.php';
@@ -35,13 +37,35 @@ foreach ($files as $file){
   if (!$defs->enabled)
     continue;
   
-  $dom = get_dom($defs->url);
-  
-  $nodes = $dom->query($defs->root);
-  debug(count($nodes) . ' nodes');
-  
+  $next = array($defs->url);
+  $visited = array();
   $items = array();
-  foreach ($nodes as $node){
+  $count = 0;
+  do {
+    $url = $next[0];
+    $visited[$url] = 1;
+    $dom = get_dom($url);
+        
+    $nodes = $dom->query($defs->root);
+    debug(count($nodes) . ' nodes');
+
+    foreach ($nodes as $node)
+      if ($result = parse_item($node, $defs, $fix))
+        $items[] = $result;
+    
+    $next = array();
+    if ($defs->next)
+      foreach ($dom->query($defs->next) as $node)
+        $next[] = base_url($node->getAttribute('href'));
+
+  } while (!empty($next) && !isset($visited[$next[0]]) && ++$count != 5); // max 5 pages
+  
+  //debug($items); exit();
+
+  ical($defs, $items);
+}
+
+function parse_item($node, $defs, $fix){
     $d = new DOMDocument();
     $d->appendChild($d->importNode($node, TRUE));
     $zend = new Zend_Dom_Query($d->saveHTML());
@@ -80,7 +104,7 @@ foreach ($files as $file){
     }
     
     if (!($properties['dc:identifier'] && $properties['dc:date'] && $properties['dc:title']))
-      continue;
+      return FALSE;
       
     $properties['dc:identifier'] = base_url($properties['dc:identifier']);
       
@@ -88,14 +112,9 @@ foreach ($files as $file){
       $properties['start'] = strtotime($properties['dc:date']);
     
     if (!$properties['end'] && is_numeric($properties['start']))
-      $properties['end'] = $properties['start'] + 3600; // 1hr  
-
-    $items[] = $properties;
-  }
-  
-  //debug($items); exit();
-
-  ical($defs, $items);
+      $properties['end'] = $properties['start'] + 3600; // 1hr
+      
+    return $properties;
 }
 
 

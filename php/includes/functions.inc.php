@@ -1,7 +1,7 @@
 <?php
 
 function debug($t){
-  $debug = 0;
+  global $debug;
   if ($debug){
     print_r($t);
     print "\n";
@@ -9,13 +9,18 @@ function debug($t){
 }
 
 function get_dom($url){
-  global $path;
-  $path = dirname($url);
-  
+  debug($url);
+   
   $p = parse_url($url);
   
   global $root;
   $root = "{$p['scheme']}://{$p['host']}";
+  
+  global $path;
+  $path = $root . dirname($p['path']);
+  
+  global $relative;
+  $relative = $root . $p['path'];
    
   //$html = @DOMDocument::loadHTMLFile($url);
   
@@ -93,14 +98,16 @@ function innerXML($node){
 function base_url($url){
   global $root;
   global $path;
+  global $relative;
   
   $url = (string) $url;
   if (!preg_match('!^\w+://!', $url)){
     if (preg_match('!^/!', $url))
       $url = $root . $url;
-    else{
+    elseif (preg_match('/^\?/', $url))
+      $url = $relative . $url;
+    else
       $url = $path . '/' . $url;
-    }
   }
   
   return $url;

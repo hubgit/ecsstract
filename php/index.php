@@ -6,7 +6,7 @@
 
   <ul>
     <?php
-    require_once 'main.inc.php';
+    require_once 'includes/main.inc.php';
         
     $files = scandir(ROOT . 'output');
     foreach ($files as $file):
