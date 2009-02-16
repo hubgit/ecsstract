@@ -1,7 +1,7 @@
 <?php
 
 function debug($t){
-  $debug = 0;
+  global $debug;
   if ($debug){
     print_r($t);
     print "\n";
@@ -74,11 +74,12 @@ function clean_html($html){
 }
 
 function innerHTML($node){
-  $output = array();
+  $d = new DOMDocument();     
+
   foreach ($node->childNodes as $child)
-    $output[] = $child->saveXML();
+      $d->appendChild($d->importNode($child, TRUE));
    
-  return implode(' ', $output);
+  return $d->saveHTML();
 }
 
 function innerXML($node){
@@ -109,8 +110,10 @@ function base_url($url){
 function strtodate($format, $data){
   debug($format); debug($data);
   $date = DateTime::createFromFormat($format, trim($data));
-  if (is_object($date))
+  if (is_object($date)){
+    debug($date->format('c'));
     return $date->format('c');
+  }
 }
 
 function ical($defs, $events){

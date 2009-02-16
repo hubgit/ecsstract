@@ -1,5 +1,8 @@
 #!/opt/php5.3/bin/php
 <?php
+
+global $debug;
+$debug = 0;
   
 chdir(realpath(__DIR__));
 $now = time();
